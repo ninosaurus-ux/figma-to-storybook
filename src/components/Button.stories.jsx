@@ -9,14 +9,6 @@ export default {
   },
 };
 
-export const Primary = {
-  args: { children: 'Tombol' },
-};
-
-export const Secondary = {
-  args: { tone: 'secondary', children: 'Tombol' },
-};
-
-export const Disabled = {
-  args: { children: 'Tombol', isDisabled: true },
-};
+export const Primary = { args: { children: 'Button' } };
+export const Secondary = { args: { tone: 'secondary', children: 'Button' } };
+export const Disabled = { args: { children: 'Button', isDisabled: true } };
