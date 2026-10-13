@@ -1,9 +1,9 @@
 import { Button as AriaButton } from 'react-aria-components';
 
 /**
- * Button — template komponen untuk plugin Figma.
- * Styling 100% dari token Figma (via CSS variables),
- * perilaku + aksesibilitas (keyboard, focus, ARIA) dari React Aria.
+ * Button — generated from Figma ("Buttons/Button") by Figma to React Aria.
+ * Styling dari token Figma (via CSS variables),
+ * perilaku + aksesibilitas dari React Aria.
  */
 export function Button({ tone = 'primary', children, style, ...props }) {
   const tones = {
