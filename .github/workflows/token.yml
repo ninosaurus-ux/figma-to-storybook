@@ -1,0 +1,56 @@
+name: Build design tokens
+
+# Jalan setiap ada push ke tokens.json di branch main.
+# Ini yang ke-trigger saat tombol "Push" diklik di plugin Tokens Studio for Figma.
+on:
+  push:
+    branches: [main]
+    paths: ['tokens.json']
+
+permissions:
+  contents: write # untuk commit balik folder dist/
+  pages: write # untuk deploy ke GitHub Pages
+  id-token: write # dibutuhkan oleh actions/deploy-pages
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build tokens (style-dictionary + preview page)
+        run: npm run build
+
+      - name: Commit hasil build (dist/)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add dist
+          git diff --staged --quiet || git commit -m "chore: rebuild design tokens [skip ci]"
+          git push
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy ke GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
