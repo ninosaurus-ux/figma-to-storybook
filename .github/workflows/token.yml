@@ -1,11 +1,16 @@
-name: Build design tokens
+name: Build & deploy Storybook
 
-# Jalan setiap ada push ke tokens.json di branch main.
-# Ini yang ke-trigger saat tombol "Push" diklik di plugin Tokens Studio for Figma.
+# Jalan setiap ada push ke token, komponen, story, atau config — di branch main.
 on:
   push:
     branches: [main]
-    paths: ['tokens.json']
+    paths:
+      - 'tokens.json'
+      - 'src/**'
+      - '.storybook/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/**'
 
 permissions:
   contents: write # untuk commit balik folder dist/
@@ -38,10 +43,13 @@ jobs:
           git diff --staged --quiet || git commit -m "chore: rebuild design tokens [skip ci]"
           git push
 
+      - name: Build Storybook statis
+        run: npm run build-storybook
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: storybook-static
 
   deploy:
     needs: build
