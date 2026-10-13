@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body { font-family: Inter, sans-serif; margin: 0; padding: 16px; font-size: 13px; color: #333; }
+  h2 { font-size: 14px; margin: 0 0 12px; }
+  .empty { color: #999; text-align: center; margin-top: 40px; }
+  .row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #eee; }
+  .label { color: #888; }
+  .swatch { display: inline-block; width: 14px; height: 14px; border-radius: 4px; border: 1px solid #ddd; vertical-align: -2px; margin-right: 6px; }
+  code { background: #f5f5f5; padding: 1px 6px; border-radius: 4px; }
+  button { width: 100%; margin-top: 16px; padding: 10px; border: none; border-radius: 8px; background: #0d99ff; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; }
+  button:disabled { background: #ccc; cursor: not-allowed; }
+  button.push { background: #16a34a; }
+  #status { margin-top: 12px; font-size: 12px; color: #666; }
+  pre { background: #1e1e1e; color: #d4d4d4; padding: 12px; border-radius: 8px; font-size: 11px; overflow: auto; max-height: 200px; white-space: pre-wrap; word-break: break-word; }
+  .filename { font-weight: 600; margin: 12px 0 4px; font-size: 12px; }
+  input { box-sizing: border-box; padding: 8px; margin: 4px 0; border: 1px solid #ddd; border-radius: 6px; font-size: 12px; }
+  #github { display: none; margin-top: 16px; border-top: 1px solid #eee; padding-top: 4px; }
+</style>
+</head>
+<body>
+  <h2>🎨 Figma to React Aria by ninosaurus-ux</h2>
+  <div id="content"><div class="empty">Pilih sebuah component<br>di canvas Figma…</div></div>
+  <button id="generate" disabled>Generate component</button>
+  <div id="output"></div>
+
+  <div id="github">
+    <div class="filename">Push ke GitHub</div>
+    <input id="gh-token" type="password" placeholder="GitHub token (scope repo)" style="width:100%">
+    <div style="display:flex; gap:6px;">
+      <input id="gh-owner" value="ninosaurus-ux" style="flex:1">
+      <input id="gh-repo" value="figma-to-storybook" style="flex:1">
+      <input id="gh-branch" value="main" style="width:64px">
+    </div>
+    <button id="push" class="push">Push ke GitHub</button>
+  </div>
+
+  <div id="status"></div>
+
+<script>
+  let current = null;
+  let generatedFiles = [];
+
+  const toComponentName = (figmaName) =>
+    figmaName.split('/').pop().split(/[^a-zA-Z0-9]+/).filter(Boolean)
+      .map((w) => w[0].toUpperCase() + w.slice(1)).join('');
+
+  const componentTemplate = (name, figmaName) =>
+`import { Button as AriaButton } from 'react-aria-components';
+
+/**
+ * ${name} — generated from Figma ("${figmaName}") by Figma to React Aria.
+ * Styling dari token Figma (via CSS variables),
+ * perilaku + aksesibilitas dari React Aria.
+ */
+export function ${name}({ tone = 'primary', children, style, ...props }) {
+  const tones = {
+    primary: {
+      background: 'var(--color-background-primary)',
+      color: 'var(--color-text-on-brand)',
+      border: '1px solid transparent',
+    },
+    secondary: {
+      background: 'var(--color-background-secondary)',
+      color: 'var(--color-text-primary)',
+      border: '1px solid var(--color-border-strong)',
+    },
+  };
+
+  return (
+    <AriaButton
+      style={({ isFocusVisible, isDisabled }) => ({
+        ...tones[tone],
+        padding: 'var(--spacing-2) var(--spacing-4)',
+        borderRadius: 'var(--radius-md)',
+        fontSize: 'var(--font-size-md)',
+        fontWeight: 'var(--font-weight-medium)',
+        fontFamily: 'inherit',
+        cursor: isDisabled ? 'not-allowed' : 'pointer',
+        opacity: isDisabled ? 0.5 : 1,
+        outline: isFocusVisible ? '2px solid var(--color-background-primary)' : 'none',
+        outlineOffset: '2px',
+        ...style,
+      })}
+      {...props}
+    >
+      {children}
+    </AriaButton>
+  );
+}`;
+
+  const storiesTemplate = (name) =>
+`import { ${name} } from './${name}';
+
+export default {
+  title: 'Components/${name}',
+  component: ${name},
+  argTypes: {
+    tone: { control: 'select', options: ['primary', 'secondary'] },
+    isDisabled: { control: 'boolean' },
+  },
+};
+
+export const Primary = { args: { children: '${name}' } };
+export const Secondary = { args: { tone: 'secondary', children: '${name}' } };
+export const Disabled = { args: { children: '${name}', isDisabled: true } };
+`;
+
+  const escapeHtml = (s) =>
+    s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const utf8ToBase64 = (s) => btoa(unescape(encodeURIComponent(s)));
+
+  async function pushFile(owner, repo, path, code, token, branch) {
+    const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+    const headers = {
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/vnd.github+json',
+      'Content-Type': 'application/json',
+    };
+    let sha;
+    const getRes = await fetch(url + `?ref=${branch}`, { headers });
+    if (getRes.ok) sha = (await getRes.json()).sha;
+    const body = { message: `feat: generate ${path} from Figma`, content: utf8ToBase64(code), branch };
+    if (sha) body.sha = sha;
+    const putRes = await fetch(url, { method: 'PUT', headers, body: JSON.stringify(body) });
+    if (!putRes.ok) throw new Error(`GitHub API ${putRes.status}`);
+    return putRes.json();
+  }
+
+  onmessage = (event) => {
+    const msg = event.data.pluginMessage;
+    const content = document.getElementById('content');
+    const btn = document.getElementById('generate');
+    document.getElementById('output').innerHTML = '';
+    document.getElementById('status').textContent = '';
+    document.getElementById('github').style.display = 'none';
+    generatedFiles = [];
+
+    if (msg.type === 'no-selection') {
+      current = null;
+      content.innerHTML = '<div class="empty">Pilih sebuah component<br>di canvas Figma…</div>';
+      btn.disabled = true;
+      return;
+    }
+
+    if (msg.type === 'selection') {
+      current = msg;
+      const swatch = msg.fillHex
+        ? `<span class="swatch" style="background:${msg.fillHex}"></span><code>${msg.fillHex}</code>`
+        : '<span style="color:#999">—</span>';
+      content.innerHTML = `
+        <div class="row"><span class="label">Nama</span><code>${msg.name}</code></div>
+        <div class="row"><span class="label">Tipe node</span><code>${msg.nodeType}</code></div>
+        <div class="row"><span class="label">Fill</span><span>${swatch}</span></div>
+      `;
+      btn.disabled = false;
+    }
+  };
+
+  document.getElementById('generate').onclick = () => {
+    if (!current) return;
+    const name = toComponentName(current.name);
+    generatedFiles = [
+      { path: `src/components/${name}.jsx`, code: componentTemplate(name, current.name) },
+      { path: `src/components/${name}.stories.jsx`, code: storiesTemplate(name) },
+    ];
+    document.getElementById('output').innerHTML = generatedFiles.map((f) => `
+      <div class="filename"><code>${f.path}</code></div>
+      <pre>${escapeHtml(f.code)}</pre>
+    `).join('');
+    document.getElementById('github').style.display = 'block';
+    document.getElementById('status').textContent = '';
+  };
+
+  document.getElementById('push').onclick = async () => {
+    const token = document.getElementById('gh-token').value.trim();
+    const owner = document.getElementById('gh-owner').value.trim();
+    const repo = document.getElementById('gh-repo').value.trim();
+    const branch = document.getElementById('gh-branch').value.trim() || 'main';
+    const status = document.getElementById('status');
+    const btn = document.getElementById('push');
+    if (!token) { status.textContent = 'Isi GitHub token dulu (scope repo).'; return; }
+    if (!generatedFiles.length) { status.textContent = 'Generate dulu komponennya.'; return; }
+    btn.disabled = true;
+    try {
+      for (const f of generatedFiles) {
+        status.textContent = `Pushing ${f.path}…`;
+        await pushFile(owner, repo, f.path, f.code, token, branch);
+      }
+      status.textContent = '✅ Pushed! Cek tab Actions — Storybook auto-deploy.';
+    } catch (e) {
+      status.textContent = '❌ Gagal: ' + e.message;
+    } finally {
+      btn.disabled = false;
+    }
+  };
+</script>
+</body>
+</html>
