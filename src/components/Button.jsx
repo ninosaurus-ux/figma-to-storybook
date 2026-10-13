@@ -3,50 +3,48 @@ import { Button as AriaButton } from 'react-aria-components';
 /**
  * Button — generated from Figma ("Buttons/Button") by Figma to React Aria.
  * Variant Figma → props: hierarchy, size, icon.
+ * Warna, radius, padding & font-size dibaca langsung dari tiap variant
+ * (nilai mentah Figma — mapping ke design token langkah berikutnya).
  */
-const TONE_STYLES = {
-  primary: { background: 'var(--color-background-primary)', color: 'var(--color-text-on-brand)', border: '1px solid transparent' },
-  secondary: { background: 'var(--color-background-secondary)', color: 'var(--color-text-primary)', border: '1px solid var(--color-border-strong)' },
-  tertiary: { background: 'transparent', color: 'var(--color-text-primary)', border: '1px solid transparent' },
-  link: { background: 'transparent', color: 'var(--color-background-primary)', border: '1px solid transparent' },
-  gray: { background: 'var(--color-background-secondary)', color: 'var(--color-text-secondary)', border: '1px solid var(--color-border-subtle)' },
+const HIERARCHY_STYLES = {
+  'Primary': { background: '#1352BF', border: '1px solid #1352BF', color: '#FFFFFF', borderRadius: '8px' },
+  'Secondary color': { background: '#FFFFFF', border: '1px solid #1352BF', color: '#1352BF', borderRadius: '8px' },
+  'Link color': { background: '#E5E7EB', border: '1px solid #E5E7EB', color: '#1352BF', borderRadius: '0px' },
+  'Link gray': { background: '#E5E7EB', border: '1px solid #E5E7EB', color: '#182230', borderRadius: '0px' },
+  'Tertiary color': { background: '#E5E7EB', border: '1px solid #E5E7EB', color: '#1352BF', borderRadius: '8px' },
+  'Tertiary gray': { background: '#E5E7EB', border: '1px solid #E5E7EB', color: '#182230', borderRadius: '8px' },
+  'Secondary gray': { background: '#FFFFFF', border: '1px solid #E4E7EC', color: '#101828', borderRadius: '8px' },
 };
-// Nilai variant Hierarchy (dari Figma) → tone di atas.
-const HIERARCHY_TONE = {
-  'Primary': 'primary',
-  'Secondary color': 'secondary',
-  'Link color': 'link',
-  'Link gray': 'link',
-  'Tertiary color': 'tertiary',
-  'Tertiary gray': 'tertiary',
-  'Secondary gray': 'gray',
-};
-const SIZES = {
-  xs: { padding: 'var(--spacing-1) var(--spacing-2)', fontSize: 'var(--font-size-sm)' },
-  sm: { padding: 'var(--spacing-1) var(--spacing-3)', fontSize: 'var(--font-size-sm)' },
-  md: { padding: 'var(--spacing-2) var(--spacing-4)', fontSize: 'var(--font-size-md)' },
-  lg: { padding: 'var(--spacing-3) var(--spacing-5)', fontSize: 'var(--font-size-lg)' },
-  xl: { padding: 'var(--spacing-4) var(--spacing-6)', fontSize: 'var(--font-size-lg)' },
-  '2xl': { padding: 'var(--spacing-5) var(--spacing-6)', fontSize: 'var(--font-size-xl)' },
+
+const SIZE_STYLES = {
+  'md': { padding: '16px 16px 16px 16px', fontSize: '14px' },
+  'lg': { padding: '0px 20px 0px 20px', fontSize: '16px' },
+  'xl': { padding: '0px 24px 0px 24px', fontSize: '18px' },
+  '2xl': { padding: '0px 24px 0px 24px', fontSize: '18px' },
+  'sm': { padding: '8px 16px 8px 16px', fontSize: '12px' },
+  'xs': { padding: '4px 8px 4px 8px', fontSize: '12px' },
 };
 
 export function Button({ hierarchy = 'Primary', size = 'md', icon = 'Default', children, style, ...props }) {
-  const tone = TONE_STYLES[HIERARCHY_TONE[hierarchy] || 'primary'];
-  const sizeStyle = SIZES[size] || SIZES.md;
+  const h = HIERARCHY_STYLES[hierarchy] || {};
+  const sz = SIZE_STYLES[size] || {};
   return (
     <AriaButton
       style={({ isFocusVisible, isDisabled }) => ({
-        ...tone,
-        ...sizeStyle,
-        borderRadius: 'var(--radius-md)',
-        fontWeight: 'var(--font-weight-medium)',
+        background: h.background,
+        border: h.border,
+        color: h.color,
+        borderRadius: h.borderRadius,
+        padding: sz.padding,
+        fontSize: sz.fontSize,
+        fontWeight: 500,
         fontFamily: 'inherit',
         display: 'inline-flex',
         alignItems: 'center',
-        gap: 'var(--spacing-2)',
+        gap: '8px',
         cursor: isDisabled ? 'not-allowed' : 'pointer',
         opacity: isDisabled ? 0.5 : 1,
-        outline: isFocusVisible ? '2px solid var(--color-background-primary)' : 'none',
+        outline: isFocusVisible ? '2px solid #0D99FF' : 'none',
         outlineOffset: '2px',
         ...style,
       })}
