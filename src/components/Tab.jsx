@@ -1,8 +1,8 @@
-// Tab: tag/label non-interaktif — tanpa React Aria.
+import { Button as AriaButton } from 'react-aria-components';
 
 /**
  * Tab — generated from Figma ("Tab") by Figma to React Aria.
- * Primitif: Tag/Label (<span>) — non-interaktif.
+ * Primitif: Button (React Aria) — interaktif.
  * Variant Figma → props: width.
  * Warna, radius, padding, tinggi & font dibaca langsung dari tiap variant
  * (nilai mentah Figma — mapping ke design token langkah berikutnya).
@@ -30,8 +30,8 @@ export function Tab({ width = 'Max', children, style, ...props }) {
 
   };
   return (
-    <span
-      style={{
+    <AriaButton
+      style={({ isFocusVisible, isDisabled }) => ({
         ...BASE_STYLE,
         ...overrides,
         boxSizing: 'border-box',
@@ -41,11 +41,15 @@ export function Tab({ width = 'Max', children, style, ...props }) {
         alignItems: 'center',
         justifyContent: 'center',
         gap: '0px',
+        cursor: isDisabled ? 'not-allowed' : 'pointer',
+        opacity: isDisabled ? 0.5 : 1,
+        outline: isFocusVisible ? '2px solid #0D99FF' : 'none',
+        outlineOffset: '2px',
         ...style,
-      }}
+      })}
       {...props}
     >
       {children}
-    </span>
+    </AriaButton>
   );
 }
