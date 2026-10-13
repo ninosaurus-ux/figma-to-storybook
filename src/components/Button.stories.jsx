@@ -4,11 +4,13 @@ export default {
   title: 'Components/Button',
   component: Button,
   argTypes: {
-    tone: { control: 'select', options: ['primary', 'secondary'] },
+    hierarchy: { control: 'select', options: ['Primary', 'Secondary color', 'Link color', 'Link gray', 'Tertiary color', 'Tertiary gray', 'Secondary gray'] },
+    size: { control: 'select', options: ['md', 'lg', 'xl', '2xl', 'sm', 'xs'] },
+    icon: { control: 'select', options: ['Dot leading', 'Default', 'Only'] },
     isDisabled: { control: 'boolean' },
   },
 };
 
-export const Primary = { args: { children: 'Button' } };
-export const Secondary = { args: { tone: 'secondary', children: 'Button' } };
-export const Disabled = { args: { children: 'Button', isDisabled: true } };
+export const Playground = {
+  args: { children: 'Button', hierarchy: 'Primary', size: 'md', icon: 'Default' },
+};
