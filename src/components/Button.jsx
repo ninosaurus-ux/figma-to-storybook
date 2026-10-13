@@ -7,7 +7,7 @@ const Icon0 = () => (
 
 const Icon1 = () => (
   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-<mask id="mask0_15_140" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="6" y="4" width="8" height="12">
+<mask id="mask0_15_140" style={{ maskType: 'alpha' }} maskUnits="userSpaceOnUse" x="6" y="4" width="8" height="12">
 <path d="M11.9108 4.4108C12.2362 4.08536 12.7637 4.08536 13.0892 4.4108C13.4146 4.73623 13.4146 5.26374 13.0892 5.58918L8.67837 9.99999L13.0892 14.4108C13.4146 14.7362 13.4146 15.2637 13.0892 15.5892C12.7637 15.9146 12.2362 15.9146 11.9108 15.5892L6.9108 10.5892C6.58536 10.2637 6.58536 9.73623 6.9108 9.4108L11.9108 4.4108Z" fill="black"/>
 </mask>
 <g mask="url(#mask0_15_140)">
@@ -18,7 +18,7 @@ const Icon1 = () => (
 
 const Icon2 = () => (
   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-<mask id="mask0_15_143" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="4" y="6" width="12" height="8">
+<mask id="mask0_15_143" style={{ maskType: 'alpha' }} maskUnits="userSpaceOnUse" x="4" y="6" width="12" height="8">
 <path d="M14.4108 6.9108C14.7362 6.58536 15.2637 6.58536 15.5892 6.9108C15.9146 7.23623 15.9146 7.76374 15.5892 8.08918L10.5892 13.0892C10.2637 13.4146 9.73623 13.4146 9.4108 13.0892L4.4108 8.08918C4.08536 7.76374 4.08536 7.23623 4.4108 6.9108C4.73623 6.58536 5.26374 6.58536 5.58918 6.9108L9.99999 11.3216L14.4108 6.9108Z" fill="black"/>
 </mask>
 <g mask="url(#mask0_15_143)">
@@ -29,7 +29,7 @@ const Icon2 = () => (
 
 const Icon3 = () => (
   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-<mask id="mask0_15_272" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="6" y="4" width="8" height="12">
+<mask id="mask0_15_272" style={{ maskType: 'alpha' }} maskUnits="userSpaceOnUse" x="6" y="4" width="8" height="12">
 <path d="M11.9108 4.4108C12.2363 4.08536 12.7638 4.08536 13.0892 4.4108C13.4146 4.73623 13.4146 5.26374 13.0892 5.58918L8.6784 9.99999L13.0892 14.4108C13.4146 14.7362 13.4146 15.2637 13.0892 15.5892C12.7638 15.9146 12.2363 15.9146 11.9108 15.5892L6.91083 10.5892C6.58539 10.2637 6.58539 9.73623 6.91083 9.4108L11.9108 4.4108Z" fill="black"/>
 </mask>
 <g mask="url(#mask0_15_272)">
