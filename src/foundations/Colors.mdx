@@ -1,0 +1,47 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import tokens from '../../tokens.json';
+
+<Meta title="Foundations/Colors" />
+
+# Colors
+
+Token warna dari Figma, disync via Tokens Studio.
+Ubah di Figma → Push → halaman ini ikut berubah otomatis.
+
+export function collectColors() {
+  const out = [];
+  const walk = (node, path) => {
+    for (const [key, val] of Object.entries(node)) {
+      if (key.startsWith('$')) continue;
+      const hasValue = val && typeof val === 'object' && ('value' in val || '$value' in val);
+      if (hasValue) {
+        const type = '$type' in val ? val.$type : val.type;
+        if (type === 'color') out.push({ name: [...path, key].join('.'), token: val });
+      } else if (val && typeof val === 'object') {
+        walk(val, [...path, key]);
+      }
+    }
+  };
+  for (const [setName, set] of Object.entries(tokens)) {
+    if (setName.startsWith('$')) continue;
+    walk(set, []);
+  }
+  return out;
+}
+
+export const colors = collectColors();
+export const varName = (name) => '--' + name.split('.').join('-').toLowerCase().replace(/[^a-z0-9-]/g, '');
+export const desc = (token) => ('$description' in token ? token.$description : token.description);
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '12px' }}>
+  {colors.map(({ name, token }) => (
+    <div key={name} style={{ border: '1px solid #e5e7eb', borderRadius: '8px', overflow: 'hidden' }}>
+      <div style={{ height: '64px', background: `var(${varName(name)})` }} />
+      <div style={{ padding: '8px', fontSize: '12px' }}>
+        <div style={{ fontWeight: 600 }}><code>{name}</code></div>
+        <div style={{ color: '#6b7280' }}><code>{varName(name)}</code></div>
+        {desc(token) && <div style={{ color: '#9ca3af', marginTop: '4px' }}>{desc(token)}</div>}
+      </div>
+    </div>
+  ))}
+</div>

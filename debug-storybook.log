@@ -1,0 +1,15 @@
+[17:24:06.846] [INFO] [36mInitializing Storybook[39m
+[17:24:07.331] [DEBUG] Getting package.json info for /workspaces/figma-to-storybook/package.json...
+[17:24:07.331] [INFO] Package manager: npm
+[17:24:07.334] [DEBUG] Getting CLI versions from NPM for storybook...
+[17:24:07.334] [DEBUG] Executing command: npm info storybook version
+[17:24:08.589] [INFO] Adding Storybook version 10.6.2 to your project
+[17:24:08.591] [DEBUG] Executing command: npm config get min-release-age --workspaces=false --include-workspace-root
+[17:24:08.846] [DEBUG] Using cached package.json for /workspaces/figma-to-storybook/package.json...
+[17:24:08.847] [ERROR] Unable to initialize Storybook in this directory.
+
+Storybook couldn't detect a supported framework or configuration for your project. Make sure you're inside a framework project (e.g., React, Vue, Svelte, Angular, Next.js) and that its dependencies are installed.
+
+Tips:
+- Run init in an empty directory or create a new framework app first.
+- If this directory contains unrelated files, try a new directory for Storybook.
