@@ -1,3 +1,7 @@
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+  
 name: Build & deploy Storybook
 
 # Jalan setiap ada push ke token, komponen, story, atau config — di branch main.
