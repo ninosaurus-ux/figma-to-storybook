@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design Tokens — Preview</title>
+<link rel="stylesheet" href="variables.css">
+<style>
+  :root { color-scheme: light; }
+  body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; margin: 0; background: #fafafa; color: #111; }
+  header { background: #111827; color: #fff; padding: 28px 32px; }
+  header h1 { margin: 0 0 6px; font-size: 22px; }
+  header p { margin: 0; opacity: .75; font-size: 14px; }
+  main { max-width: 1080px; margin: 0 auto; padding: 24px 32px 64px; }
+  section { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px 24px; margin: 20px 0; }
+  h2 { margin: 0 0 4px; font-size: 18px; }
+  h3 { margin: 20px 0 12px; font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: .04em; }
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+  .swatch-card { border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; }
+  .swatch { height: 72px; border-bottom: 1px solid #e5e7eb; }
+  .swatch-name { font-size: 13px; font-weight: 600; padding: 8px 10px 0; }
+  .swatch-value { font-size: 12px; color: #4b5563; padding: 2px 10px; }
+  .swatch-desc { font-size: 12px; color: #9ca3af; padding: 0 10px 8px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #f3f4f6; }
+  th { color: #6b7280; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+  code { background: #f3f4f6; padding: 1px 6px; border-radius: 6px; font-size: 12px; }
+  footer { text-align: center; color: #9ca3af; font-size: 12px; padding: 24px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🎨 Design Tokens — Preview</h1>
+  <p>Halaman ini membaca <code>variables.css</code> hasil build style-dictionary. Swatch di bawah memakai <code>var(--...)</code> langsung — kalau warnanya tampil, pipeline-nya jalan.</p>
+</header>
+<main>
+
+</main>
+<footer>Dibangun otomatis dari <code>tokens.json</code> via GitHub Actions · figma-to-storybook</footer>
+</body>
+</html>
