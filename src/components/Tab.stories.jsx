@@ -5,6 +5,7 @@ export default {
   component: Tab,
   argTypes: {
     width: { control: 'select', options: ['Max', 'Icon + X', 'Text + X', 'Hug Icon', 'X', 'Min'] },
+    isDisabled: { control: 'boolean' },
   },
 };
 
