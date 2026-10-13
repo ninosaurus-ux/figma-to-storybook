@@ -42,7 +42,7 @@ export function Button({ hierarchy = 'Primary', size = 'md', icon = 'Default', c
         height: sz.height,
         boxSizing: 'border-box',
         fontWeight: 700,
-        fontFamily: 'Nunito, sans-serif,
+        fontFamily: 'Nunito, sans-serif',
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',
