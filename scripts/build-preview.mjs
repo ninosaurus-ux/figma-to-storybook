@@ -14,16 +14,24 @@ function walk(node, set, path) {
   for (const [key, val] of Object.entries(node)) {
     if (key.startsWith('$')) continue;
     const nextPath = [...path, key];
-    if (val !== null && typeof val === 'object' && !Array.isArray(val) && 'value' in val) {
+    // Dukung dua format: "$value/$type" (output asli plugin v2.x)
+    // dan "value/type" (format lama).
+    const hasValue = val !== null && typeof val === 'object' && !Array.isArray(val)
+      && ('value' in val || '$value' in val);
+    if (hasValue) {
       flat.set(`${set}::${nextPath.join('.')}`, {
-        set, path: nextPath.join('.'), type: val.type,
-        value: val.value, description: val.description,
+        set,
+        path: nextPath.join('.'),
+        type: '$type' in val ? val.$type : val.type,
+        value: '$value' in val ? val.$value : val.value,
+        description: '$description' in val ? val.$description : val.description,
       });
     } else if (val !== null && typeof val === 'object' && !Array.isArray(val)) {
       walk(val, set, nextPath);
     }
   }
 }
+
 
 // Baca tokens.json — urutan set mengikuti $metadata.tokenSetOrder
 const content = JSON.parse(await readFile(join(rootDir, 'tokens.json'), 'utf-8'));
