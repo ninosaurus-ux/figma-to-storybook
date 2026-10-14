@@ -12,5 +12,5 @@ export default {
 };
 
 export const Playground = {
-  args: { children: 'Button', hierarchy: 'Primary', size: 'md', icon: 'Default' },
+  args: { children: 'Button CTA', hierarchy: 'Primary', size: 'md', icon: 'Default' },
 };
