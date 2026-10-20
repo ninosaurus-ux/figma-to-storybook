@@ -53,12 +53,40 @@ const SIZE_STYLES = {
   'md': { padding: '12px 24px 12px 24px', fontSize: '16px', borderRadius: '999px' },
   'lg': { padding: '16px 32px 16px 32px', fontSize: '18px', borderRadius: '999px' },
 };
+const VARIANT_STYLES = {
+  'sm|Default': {
+    background: '#1352BF',
+    border: 'none',
+    color: '#FFFFFF',
+    borderRadius: '999px',
+    padding: '8px 16px 8px 16px',
+    fontSize: '14px',
+    gap: '8px',
+  },
+  'md|Default': {
+    background: '#1352BF',
+    border: 'none',
+    color: '#FFFFFF',
+    borderRadius: '999px',
+    padding: '12px 24px 12px 24px',
+    fontSize: '16px',
+    gap: '8px',
+  },
+  'lg|Default': {
+    background: '#F04438',
+    border: 'none',
+    color: '#FFFFFF',
+    borderRadius: '999px',
+    padding: '16px 32px 16px 32px',
+    fontSize: '18px',
+    gap: '8px',
+  },
+};
+
 
 export function Button({ hierarchy = 'Default', size = 'md', children, style, ...props }) {
-  const overrides = {
-    ...(HIERARCHY_STYLES[hierarchy] || {}),
-    ...(SIZE_STYLES[size] || {}),
-  };
+  const variantKey = `${size}|${hierarchy}`;
+  const overrides = VARIANT_STYLES[variantKey] || {};
   return (
     <AriaButton
       style={({ isFocusVisible, isDisabled }) => ({
